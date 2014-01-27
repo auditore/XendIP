@@ -603,10 +603,30 @@ static int bgp_rip_ntp_builder(xmlNodePtr node, ip_packet* ipPacket)
         {
             curNodeContent = xmlNodeGetContent(l7SubNodePtr);
 
-            ipPacket->datalen = strlen((char*)curNodeContent);
-            ipPacket->data = malloc(ipPacket->datalen);
-            memcpy(ipPacket->data, curNodeContent, ipPacket->datalen);
-            ipPacket->datalen = compact_string(ipPacket->data);
+            if(ipPacket->datalen == 0)
+            {
+                //ipPacket->datalen_accu = strlen((char*)curNodeContent)+1;
+                ipPacket->datalen = compact_string((char*)curNodeContent);
+                ipPacket->data = malloc(ipPacket->datalen + 1);
+                strcpy(ipPacket->data, (char*)curNodeContent);
+#if DEBUG
+                printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+                //ipPacket->datalen = compact_string(ipPacket->data);
+                //ipPacket->datalen = strlen(ipPacket->data);
+#if DEBUG
+                printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+            }
+            else
+            {
+                ipPacket->datalen += compact_string((char*)curNodeContent);
+                ipPacket->data = realloc(ipPacket->data, (ipPacket->datalen + 1));
+                strcat(ipPacket->data, (char*)curNodeContent);
+#if DEBUG
+                printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+            }
 
             xmlFree(curNodeContent);
             curNodeContent = NULL;
@@ -765,10 +785,30 @@ static int ip_builder (xmlNodePtr node)
             {
                 curNodeContent = xmlNodeGetContent(ipSubNodePtr);
 
-                ipPacket->datalen = strlen((char*)curNodeContent);
-                ipPacket->data = malloc(ipPacket->datalen);
-                memcpy(ipPacket->data, curNodeContent, ipPacket->datalen);
-                ipPacket->datalen = compact_string(ipPacket->data);
+                if(ipPacket->datalen == 0)
+                {
+                    //ipPacket->datalen_accu = strlen((char*)curNodeContent)+1;
+                    ipPacket->datalen = compact_string((char*)curNodeContent);
+                    ipPacket->data = malloc(ipPacket->datalen + 1);
+                    strcpy(ipPacket->data, (char*)curNodeContent);
+#if DEBUG
+                    printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+                    //ipPacket->datalen = compact_string(ipPacket->data);
+                    //ipPacket->datalen = strlen(ipPacket->data);
+#if DEBUG
+                    printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+                }
+                else
+                {
+                    ipPacket->datalen += compact_string((char*)curNodeContent);
+                    ipPacket->data = realloc(ipPacket->data, (ipPacket->datalen + 1));
+                    strcat(ipPacket->data, (char*)curNodeContent);
+#if DEBUG
+                    printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+                }
 
                 xmlFree(curNodeContent);
                 curNodeContent = NULL;
