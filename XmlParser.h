@@ -11,8 +11,6 @@ typedef struct _ip_pac {
     sendip_data packet;
     unsigned int num_modules;
     unsigned int datalen;
-    unsigned int datalen_accu;
-    unsigned int datalen_temp;
     char* hdrs;
     char* data;
     sendip_data** headers;

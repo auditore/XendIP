@@ -120,8 +120,6 @@ static int init_ip_packet(ip_packet* ip_p)
     ip_p->packet.modified = 0;
     ip_p->num_modules = 0;
     ip_p->datalen = 0;
-    ip_p->datalen_accu = 0;
-    ip_p->datalen_temp = 0;
     ip_p->hdrs = NULL;
     ip_p->data = NULL;
     ip_p->headers = NULL;
