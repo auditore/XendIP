@@ -120,6 +120,8 @@ static int init_ip_packet(ip_packet* ip_p)
     ip_p->packet.modified = 0;
     ip_p->num_modules = 0;
     ip_p->datalen = 0;
+    ip_p->datalen_accu = 0;
+    ip_p->datalen_temp = 0;
     ip_p->hdrs = NULL;
     ip_p->data = NULL;
     ip_p->headers = NULL;
@@ -659,11 +661,34 @@ static int tcp_udp_icmp_builder(xmlNodePtr node, ip_packet* ipPacket)
             else if( !xmlStrcmp(l3SubNodePtr->name, BAD_CAST "payload" ))
             {
                 curNodeContent = xmlNodeGetContent(l3SubNodePtr);
+#if DEBUG
+                printf("data = %s\n ",(char*)curNodeContent);
+#endif
 
-                ipPacket->datalen = strlen((char*)curNodeContent);
-                ipPacket->data = malloc(ipPacket->datalen);
-                memcpy(ipPacket->data, curNodeContent, ipPacket->datalen);
-                ipPacket->datalen = compact_string(ipPacket->data);
+                if(ipPacket->datalen == 0)
+                {
+                    //ipPacket->datalen_accu = strlen((char*)curNodeContent)+1;
+                    ipPacket->datalen = compact_string((char*)curNodeContent);
+                    ipPacket->data = malloc(ipPacket->datalen + 1);
+                    strcpy(ipPacket->data, (char*)curNodeContent);
+#if DEBUG
+                    printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+                    //ipPacket->datalen = compact_string(ipPacket->data);
+                    //ipPacket->datalen = strlen(ipPacket->data);
+#if DEBUG
+                    printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+                }
+                else
+                {
+                    ipPacket->datalen += compact_string((char*)curNodeContent);
+                    ipPacket->data = realloc(ipPacket->data, (ipPacket->datalen + 1));
+                    strcat(ipPacket->data, (char*)curNodeContent);
+#if DEBUG
+                    printf("data = %s\tdatalen = %d\n",ipPacket->data,ipPacket->datalen);
+#endif
+                }
 
                 xmlFree(curNodeContent);
                 curNodeContent = NULL;
