@@ -1690,16 +1690,71 @@ int Xml_Fuzzer ( char* fileName)
     /** Do the Fuzzing **/
     for(i = 0; i < fuzz_info->iteration; i++)
     {
-    if(!(fuzz_info->reverse))
-    {
-        if(fuzz_info->dst_ip_fuzz)
+        if(!(fuzz_info->reverse))
         {
-            for(curIp2n = dstIpp->ip_n_start; curIp2n <= dstIpp->ip_n_end; curIp2n++)
+            if(fuzz_info->dst_ip_fuzz)
             {
-                if(fuzz_info->dst_pt_fuzz)
+                for(curIp2n = dstIpp->ip_n_start; curIp2n <= dstIpp->ip_n_end; curIp2n++)
                 {
-                    for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                    if(fuzz_info->dst_pt_fuzz)
                     {
+                        for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                        {
+                            if(fuzz_info->src_ip_fuzz)
+                            {
+                                for(curIp1n = srcIpp->ip_n_start; curIp1n <= srcIpp->ip_n_end; curIp1n++)
+                                {
+                                    if(fuzz_info->src_pt_fuzz)
+                                    {
+                                        for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
+                                        {
+#if DEBUG
+                                            printf("We go here1\n");
+#endif
+                                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                            usleep(fuzz_info->delay);
+                                        }
+                                    }
+                                    else
+                                    {
+#if DEBUG
+                                        printf("We go here2\n");
+#endif
+                                        curPort1n = srcIpp->port_n_solid;
+                                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                        usleep(fuzz_info->delay);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                curIp1n = srcIpp->ip_n_solid;
+                                if(fuzz_info->src_pt_fuzz)
+                                {
+                                    for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
+                                    {
+#if DEBUG
+                                        printf("We go here3\n");
+#endif
+                                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                        usleep(fuzz_info->delay);
+                                    }
+                                }
+                                else
+                                {
+#if DEBUG
+                                    printf("We go here4\n");
+#endif
+                                    curPort1n = srcIpp->port_n_solid;
+                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                    usleep(fuzz_info->delay);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        curPort2n = dstIpp->port_n_solid;
                         if(fuzz_info->src_ip_fuzz)
                         {
                             for(curIp1n = srcIpp->ip_n_start; curIp1n <= srcIpp->ip_n_end; curIp1n++)
@@ -1709,7 +1764,7 @@ int Xml_Fuzzer ( char* fileName)
                                     for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
                                     {
 #if DEBUG
-                                printf("We go here1\n");
+                                        printf("We go here5\n");
 #endif
                                         stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                                         usleep(fuzz_info->delay);
@@ -1718,7 +1773,7 @@ int Xml_Fuzzer ( char* fileName)
                                 else
                                 {
 #if DEBUG
-                                printf("We go here2\n");
+                                    printf("We go here6\n");
 #endif
                                     curPort1n = srcIpp->port_n_solid;
                                     stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
@@ -1734,7 +1789,7 @@ int Xml_Fuzzer ( char* fileName)
                                 for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
                                 {
 #if DEBUG
-                                printf("We go here3\n");
+                                    printf("We go here7\n");
 #endif
                                     stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                                     usleep(fuzz_info->delay);
@@ -1743,7 +1798,67 @@ int Xml_Fuzzer ( char* fileName)
                             else
                             {
 #if DEBUG
-                                printf("We go here4\n");
+                                printf("We go here8\n");
+#endif
+                                curPort1n = srcIpp->port_n_solid;
+                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                usleep(fuzz_info->delay);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                curIp2n = dstIpp->ip_n_solid;
+                if(fuzz_info->dst_pt_fuzz)
+                {
+                    for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                    {
+                        if(fuzz_info->src_ip_fuzz)
+                        {
+                            for(curIp1n = srcIpp->ip_n_start; curIp1n <= srcIpp->ip_n_end; curIp1n++)
+                            {
+                                if(fuzz_info->src_pt_fuzz)
+                                {
+                                    for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
+                                    {
+#if DEBUG
+                                        printf("We go here9\n");
+#endif
+                                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                        usleep(fuzz_info->delay);
+                                    }
+                                }
+                                else
+                                {
+#if DEBUG
+                                    printf("We go here10\n");
+#endif
+                                    curPort1n = srcIpp->port_n_solid;
+                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                    usleep(fuzz_info->delay);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            curIp1n = srcIpp->ip_n_solid;
+                            if(fuzz_info->src_pt_fuzz)
+                            {
+                                for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
+                                {
+#if DEBUG
+                                    printf("We go here11\n");
+#endif
+                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                    usleep(fuzz_info->delay);
+                                }
+                            }
+                            else
+                            {
+#if DEBUG
+                                printf("We go here12\n");
 #endif
                                 curPort1n = srcIpp->port_n_solid;
                                 stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
@@ -1764,7 +1879,7 @@ int Xml_Fuzzer ( char* fileName)
                                 for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
                                 {
 #if DEBUG
-                                printf("We go here5\n");
+                                    printf("------------------------------------------------------------------->We go here13\n");
 #endif
                                     stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                                     usleep(fuzz_info->delay);
@@ -1773,7 +1888,7 @@ int Xml_Fuzzer ( char* fileName)
                             else
                             {
 #if DEBUG
-                                printf("We go here6\n");
+                                printf("We go here14\n");
 #endif
                                 curPort1n = srcIpp->port_n_solid;
                                 stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
@@ -1789,7 +1904,7 @@ int Xml_Fuzzer ( char* fileName)
                             for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
                             {
 #if DEBUG
-                                printf("We go here7\n");
+                                printf("We go here15\n");
 #endif
                                 stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                                 usleep(fuzz_info->delay);
@@ -1798,7 +1913,7 @@ int Xml_Fuzzer ( char* fileName)
                         else
                         {
 #if DEBUG
-                                printf("We go here8\n");
+                            printf("We go here16\n");
 #endif
                             curPort1n = srcIpp->port_n_solid;
                             stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
@@ -1810,129 +1925,69 @@ int Xml_Fuzzer ( char* fileName)
         }
         else
         {
-            curIp2n = dstIpp->ip_n_solid;
-            if(fuzz_info->dst_pt_fuzz)
+            if(fuzz_info->src_ip_fuzz)
             {
-                for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                for(curIp1n = srcIpp->ip_n_start; curIp1n <= srcIpp->ip_n_end; curIp1n++)
                 {
-                    if(fuzz_info->src_ip_fuzz)
-                    {
-                        for(curIp1n = srcIpp->ip_n_start; curIp1n <= srcIpp->ip_n_end; curIp1n++)
-                        {
-                            if(fuzz_info->src_pt_fuzz)
-                            {
-                                for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
-                                {
-#if DEBUG
-                                printf("We go here9\n");
-#endif
-                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                    usleep(fuzz_info->delay);
-                                }
-                            }
-                            else
-                            {
-#if DEBUG
-                                printf("We go here10\n");
-#endif
-                                curPort1n = srcIpp->port_n_solid;
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        curIp1n = srcIpp->ip_n_solid;
-                        if(fuzz_info->src_pt_fuzz)
-                        {
-                            for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
-                            {
-#if DEBUG
-                                printf("We go here11\n");
-#endif
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                        else
-                        {
-#if DEBUG
-                                printf("We go here12\n");
-#endif
-                            curPort1n = srcIpp->port_n_solid;
-                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                            usleep(fuzz_info->delay);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                curPort2n = dstIpp->port_n_solid;
-                if(fuzz_info->src_ip_fuzz)
-                {
-                    for(curIp1n = srcIpp->ip_n_start; curIp1n <= srcIpp->ip_n_end; curIp1n++)
-                    {
-                        if(fuzz_info->src_pt_fuzz)
-                        {
-                            for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
-                            {
-#if DEBUG
-                                printf("------------------------------------------------------------------->We go here13\n");
-#endif
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                        else
-                        {
-#if DEBUG
-                                printf("We go here14\n");
-#endif
-                            curPort1n = srcIpp->port_n_solid;
-                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                            usleep(fuzz_info->delay);
-                        }
-                    }
-                }
-                else
-                {
-                    curIp1n = srcIpp->ip_n_solid;
                     if(fuzz_info->src_pt_fuzz)
                     {
                         for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
                         {
+                            if(fuzz_info->dst_ip_fuzz)
+                            {
+                                for(curIp2n = dstIpp->ip_n_start; curIp2n <= dstIpp->ip_n_end; curIp2n++)
+                                {
+                                    if(fuzz_info->dst_pt_fuzz)
+                                    {
+                                        for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                                        {
 #if DEBUG
-                                printf("We go here15\n");
+                                            printf("We go here17\n");
 #endif
-                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                            usleep(fuzz_info->delay);
+                                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                            usleep(fuzz_info->delay);
+                                        }
+                                    }
+                                    else
+                                    {
+#if DEBUG
+                                        printf("We go here18\n");
+#endif
+                                        curPort2n = dstIpp->port_n_solid;
+                                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                        usleep(fuzz_info->delay);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                curIp2n = dstIpp->ip_n_solid;
+                                if(fuzz_info->dst_pt_fuzz)
+                                {
+                                    for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                                    {
+#if DEBUG
+                                        printf("We go here19\n");
+#endif
+                                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                        usleep(fuzz_info->delay);
+                                    }
+                                }
+                                else
+                                {
+#if DEBUG
+                                    printf("We go here20\n");
+#endif
+                                    curPort2n = dstIpp->port_n_solid;
+                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                    usleep(fuzz_info->delay);
+                                }
+                            }
                         }
                     }
                     else
                     {
-#if DEBUG
-                                printf("We go here16\n");
-#endif
                         curPort1n = srcIpp->port_n_solid;
-                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                        usleep(fuzz_info->delay);
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        if(fuzz_info->src_ip_fuzz)
-        {
-            for(curIp1n = srcIpp->ip_n_start; curIp1n <= srcIpp->ip_n_end; curIp1n++)
-            {
-                if(fuzz_info->src_pt_fuzz)
-                {
-                    for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
-                    {
                         if(fuzz_info->dst_ip_fuzz)
                         {
                             for(curIp2n = dstIpp->ip_n_start; curIp2n <= dstIpp->ip_n_end; curIp2n++)
@@ -1942,7 +1997,7 @@ int Xml_Fuzzer ( char* fileName)
                                     for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
                                     {
 #if DEBUG
-                                printf("We go here17\n");
+                                        printf("We go here21\n");
 #endif
                                         stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                                         usleep(fuzz_info->delay);
@@ -1951,7 +2006,7 @@ int Xml_Fuzzer ( char* fileName)
                                 else
                                 {
 #if DEBUG
-                                printf("We go here18\n");
+                                    printf("We go here22\n");
 #endif
                                     curPort2n = dstIpp->port_n_solid;
                                     stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
@@ -1967,7 +2022,7 @@ int Xml_Fuzzer ( char* fileName)
                                 for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
                                 {
 #if DEBUG
-                                printf("We go here19\n");
+                                    printf("We go here23\n");
 #endif
                                     stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                                     usleep(fuzz_info->delay);
@@ -1976,7 +2031,67 @@ int Xml_Fuzzer ( char* fileName)
                             else
                             {
 #if DEBUG
-                                printf("We go here20\n");
+                                printf("We go here24\n");
+#endif
+                                curPort2n = dstIpp->port_n_solid;
+                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                usleep(fuzz_info->delay);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                curIp1n = srcIpp->ip_n_solid;
+                if(fuzz_info->src_pt_fuzz)
+                {
+                    for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
+                    {
+                        if(fuzz_info->dst_ip_fuzz)
+                        {
+                            for(curIp2n = dstIpp->ip_n_start; curIp2n <= dstIpp->ip_n_end; curIp2n++)
+                            {
+                                if(fuzz_info->dst_pt_fuzz)
+                                {
+                                    for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                                    {
+#if DEBUG
+                                        printf("We go here25\n");
+#endif
+                                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                        usleep(fuzz_info->delay);
+                                    }
+                                }
+                                else
+                                {
+#if DEBUG
+                                    printf("We go here26\n");
+#endif
+                                    curPort2n = dstIpp->port_n_solid;
+                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                    usleep(fuzz_info->delay);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            curIp2n = dstIpp->ip_n_solid;
+                            if(fuzz_info->dst_pt_fuzz)
+                            {
+                                for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                                {
+#if DEBUG
+                                    printf("We go here27\n");
+#endif
+                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                    usleep(fuzz_info->delay);
+                                }
+                            }
+                            else
+                            {
+#if DEBUG
+                                printf("We go here28\n");
 #endif
                                 curPort2n = dstIpp->port_n_solid;
                                 stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
@@ -1997,7 +2112,7 @@ int Xml_Fuzzer ( char* fileName)
                                 for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
                                 {
 #if DEBUG
-                                printf("We go here21\n");
+                                    printf("We go here29\n");
 #endif
                                     stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                                     usleep(fuzz_info->delay);
@@ -2005,157 +2120,42 @@ int Xml_Fuzzer ( char* fileName)
                             }
                             else
                             {
-#if DEBUG
-                                printf("We go here22\n");
-#endif
-                                curPort2n = dstIpp->port_n_solid;
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        curIp2n = dstIpp->ip_n_solid;
-                        if(fuzz_info->dst_pt_fuzz)
-                        {
-                            for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
-                            {
-#if DEBUG
-                                printf("We go here23\n");
-#endif
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                        else
-                        {
-#if DEBUG
-                                printf("We go here24\n");
-#endif
-                            curPort2n = dstIpp->port_n_solid;
-                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                            usleep(fuzz_info->delay);
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            curIp1n = srcIpp->ip_n_solid;
-            if(fuzz_info->src_pt_fuzz)
-            {
-                for(curPort1n = srcIpp->port_n_start; curPort1n <= srcIpp->port_n_end; curPort1n++)
-                {
-                    if(fuzz_info->dst_ip_fuzz)
-                    {
-                        for(curIp2n = dstIpp->ip_n_start; curIp2n <= dstIpp->ip_n_end; curIp2n++)
-                        {
-                            if(fuzz_info->dst_pt_fuzz)
-                            {
-                                for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
-                                {
-#if DEBUG
-                                printf("We go here25\n");
-#endif
-                                    stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                    usleep(fuzz_info->delay);
-                                }
-                            }
-                            else
-                            {
-#if DEBUG
-                                printf("We go here26\n");
-#endif
-                                curPort2n = dstIpp->port_n_solid;
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        curIp2n = dstIpp->ip_n_solid;
-                        if(fuzz_info->dst_pt_fuzz)
-                        {
-                            for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
-                            {
-#if DEBUG
-                                printf("We go here27\n");
-#endif
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                        else
-                        {
-#if DEBUG
-                                printf("We go here28\n");
-#endif
-                            curPort2n = dstIpp->port_n_solid;
-                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                            usleep(fuzz_info->delay);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                curPort1n = srcIpp->port_n_solid;
-                if(fuzz_info->dst_ip_fuzz)
-                {
-                    for(curIp2n = dstIpp->ip_n_start; curIp2n <= dstIpp->ip_n_end; curIp2n++)
-                    {
-                        if(fuzz_info->dst_pt_fuzz)
-                        {
-                            for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
-                            {
-#if DEBUG
-                                printf("We go here29\n");
-#endif
-                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                                usleep(fuzz_info->delay);
-                            }
-                        }
-                        else
-                        {
 #if DEBUG
                                 printf("We go here30\n");
 #endif
+                                curPort2n = dstIpp->port_n_solid;
+                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                usleep(fuzz_info->delay);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        curIp2n = dstIpp->ip_n_solid;
+                        if(fuzz_info->dst_pt_fuzz)
+                        {
+                            for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
+                            {
+#if DEBUG
+                                printf("We go here31\n");
+#endif
+                                stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
+                                usleep(fuzz_info->delay);
+                            }
+                        }
+                        else
+                        {
+#if DEBUG
+                            printf("We go here32\n");
+#endif
                             curPort2n = dstIpp->port_n_solid;
                             stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
                             usleep(fuzz_info->delay);
                         }
                     }
                 }
-                else
-                {
-                    curIp2n = dstIpp->ip_n_solid;
-                    if(fuzz_info->dst_pt_fuzz)
-                    {
-                        for(curPort2n = dstIpp->port_n_start; curPort2n <= dstIpp->port_n_end; curPort2n++)
-                        {
-#if DEBUG
-                                printf("We go here31\n");
-#endif
-                            stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                            usleep(fuzz_info->delay);
-                        }
-                    }
-                    else
-                    {
-#if DEBUG
-                                printf("We go here32\n");
-#endif
-                        curPort2n = dstIpp->port_n_solid;
-                        stamp_and_send(hostname,curIp1n,curIp2n,curPort1n,curPort2n);
-                        usleep(fuzz_info->delay);
-                    }
-                }
             }
         }
-    }
     }
 
     /** Clean up **/ 
