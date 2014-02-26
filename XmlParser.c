@@ -79,6 +79,7 @@ static int dump_fuzz_config(fuzzing_info* fuzz)
     fprintf(stderr,"dst_pt_fuzz   = %d\n",(const int)fuzz->dst_pt_fuzz);
     fprintf(stderr,"reverse       = %d\n",(const int)fuzz->reverse);
     fprintf(stderr,"delay         = %d\n",fuzz->delay);
+    fprintf(stderr,"iteration     = %d\n",fuzz->iteration);
     return 0;
 }
 #endif
@@ -98,6 +99,7 @@ static int fuzz_info_init(fuzzing_info* fi)
         fi->dst_pt_fuzz = FALSE;
         fi->reverse     = FALSE;
         fi->delay       = 0;
+        fi->iteration   = 1;
     }
 
     return 0;
@@ -961,7 +963,7 @@ static void stamp_and_send(char* host_name, unsigned int ip_s, unsigned int ip_d
     char* portS_1 = NULL;
     char* portD_1 = NULL;
 
-#if DEBUG
+#if DEBUG 
     printf("--------------------------------------------------------------------------------------------->stamp_and_send:\n");
 #endif
 
@@ -1286,6 +1288,14 @@ static int xml_parser(xmlDocPtr doc, fuzzing_info* fuzz_info, ip_port* srcIpp, i
             {
                 curAttrPtrContent = xmlGetProp(config,curAttrPtr->name);
                 fuzz_info->delay = atoi((const char*)curAttrPtrContent);
+
+                xmlFree(curAttrPtrContent);
+                curAttrPtrContent = NULL;
+            }
+            else if( !xmlStrcmp(curAttrPtr->name, BAD_CAST "iteration") )
+            {
+                curAttrPtrContent = xmlGetProp(config,curAttrPtr->name);
+                fuzz_info->iteration = atoi((const char*)curAttrPtrContent);
 
                 xmlFree(curAttrPtrContent);
                 curAttrPtrContent = NULL;
@@ -1678,6 +1688,8 @@ int Xml_Fuzzer ( char* fileName)
     build_the_packet();
 
     /** Do the Fuzzing **/
+    for(i = 0; i < fuzz_info->iteration; i++)
+    {
     if(!(fuzz_info->reverse))
     {
         if(fuzz_info->dst_ip_fuzz)
@@ -2143,6 +2155,7 @@ int Xml_Fuzzer ( char* fileName)
                 }
             }
         }
+    }
     }
 
     /** Clean up **/ 

@@ -40,6 +40,7 @@ typedef struct _fuz_info {
     bool dst_pt_fuzz;
     bool reverse;
     unsigned int delay; //delay between test cases, whose unit is mili-second
+    unsigned int iteration; //times that an identical sequence will be sent
 } fuzzing_info;
 
 #if DEBUG
