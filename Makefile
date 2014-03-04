@@ -10,12 +10,12 @@ INSTALL ?= install
 
 CFLAGS=	-fPIC -fsigned-char -g -pipe -Wall -Wpointer-arith -Wwrite-strings \
 			-Wstrict-prototypes -Wnested-externs -Winline  -g -Wcast-align \
-			-DSENDIP_LIBS=\"$(LIBDIR)\" -I /usr/local/include/libxml2/ -L /usr/local/lib -lxml2 -lz
+			-DSENDIP_LIBS=\"$(LIBDIR)\" -I/usr/include -I /usr/include/libxml2/ -L /usr/lib/ 
 #-Wcast-align causes problems on solaris, but not serious ones
 LDFLAGS=	-g -rdynamic -lm
 #LDFLAGS_SOLARIS= -g -lsocket -lnsl -lm
 LDFLAGS_SOLARIS= -g -lsocket -lnsl -lm -ldl
-LDFLAGS_LINUX= -g  -rdynamic -ldl -lm  
+LDFLAGS_LINUX= -g  -rdynamic -ldl -lm  -lxml2 -lz
 LIBCFLAGS= -shared
 CC=	gcc
 
@@ -32,7 +32,7 @@ all:	$(GLOBALOBJS) XendIp $(PROTOS) XendIp.1 XendIp.spec
 #there has to be a nice way to do this
 XendIp:	XendIp.o	gnugetopt.o gnugetopt1.o compact.o XmlParser.o
 	sh -c "if [ `uname` = Linux ] ; then \
-$(CC) -o $@ $(LDFLAGS_LINUX) $(CFLAGS) $+ ; \
+$(CC)   $(CFLAGS) $+ $(LDFLAGS_LINUX) -o $@; \
 elif [ `uname` = SunOS ] ; then \
 $(CC) -o $@ $(LDFLAGS_SOLARIS) $(CFLAGS) $+ ;\
 else \
@@ -66,3 +66,6 @@ install:		all
 			$(INSTALL) -m 755 $(PROGS) $(BINDIR)
 			$(INSTALL) -m 644 XendIp.1 $(MANDIR)
 			$(INSTALL) -m 755 $(PROTOS) $(LIBDIR)
+
+
+
